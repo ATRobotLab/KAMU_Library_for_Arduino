@@ -20,8 +20,9 @@
    unsigned long BaudRate = 115200;
    ```
   * 까무 통신 방식을 설정합니다.
-  * 블루투스 동글이를 사용해 블루투스로 연결할 경우 CONNECTION_BT 를,
-   USB-C 케이블을 사용해 직접 연결할 경우 CONNECTION_UART 를 입력해 주세요.
+  * 블루투스 동글이를 사용해 **블루투스**로 연결할 경우 ***CONNECTION_BT*** 를,
+    
+   USB-C 케이블을 사용해 **직접 연결**할 경우 ***CONNECTION_UART*** 를 입력해 주세요.
    ```
    void setup()
    {
