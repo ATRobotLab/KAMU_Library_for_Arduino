@@ -24,19 +24,16 @@
    unsigned long BaudRate = 115200;
    ```
   * 까무 통신 방식을 설정합니다.
-  * 블루투스 동글이를 사용해 **블루투스**로 연결할 경우 ***CONNECTION_BT*** 를,
-    
-    USB-C 케이블을 사용해 **직접 연결**할 경우 ***CONNECTION_UART*** 를 입력해 주세요.
+  * 블루투스 동글이를 사용해 **블루투스**로 연결할 경우 ***CONNECTION_BT*** 를,<br/>USB-C 케이블을 사용해 **직접 연결**할 경우 ***CONNECTION_UART*** 를 입력해 주세요.
+  * **init()** 함수를 사용해 까무와 아두이노의 통신 연결을 Initializing 해 주세요. 
    ```
    void setup()
    {
      kamu.setConnectionType(CONNECTION_BT);
-
-     //KAMU와 Arduino의 통신 연결을 Initializing 해주는 함수 입니다.
      kamu.init(BaudRate);
    }
    ```
-   
+  * **run()** 함수는 까무와 아두이노의 연결상태를 확인 및 업데이트 하는 함수입니다.<br/>loop문 안에서 수시로 호출 될 수 있게 작성해 주세요.
    ```
    void loop()
    {
@@ -48,7 +45,13 @@
      kamu.playBasicMotion(1);
    }
    ```
-   
+
+   4. 함수 설명
+      * playBasicMotion(int motionnum)
+      * playCustomMotion(int motionnum)
+      * rotateMotor(int motornum, int angle)
+      * rotateMotor(int motornum, int angle, int time)
+      * 
 # Licence
 The code is released under the GNU General Public License.
 
