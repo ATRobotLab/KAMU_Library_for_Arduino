@@ -3,11 +3,11 @@
 
 
 # How to Use
- ###1. ZIP형식의 소스파일을 다운로드 받습니다.
+ ### 1. ZIP형식의 소스파일을 다운로드 받습니다.
     
- ###2. 아두이노 IDE를 실행 한 뒤,  스케치 -> 라이브러리포함 -> .ZIP 라이브러리 추가... 에서 <br/> 다운로드 받은 KAMU_Library_for_Arduino-main.zip를 추가해 주세요.
+ ### 2. 아두이노 IDE를 실행 한 뒤,  스케치 -> 라이브러리포함 -> .ZIP 라이브러리 추가... 에서 <br/> 다운로드 받은 KAMU_Library_for_Arduino-main.zip를 추가해 주세요.
     
- ###3. 라이브러리 설명
+ ### 3. 라이브러리 설명
   * kamu.h 라이브러리를 include 합니다.
    ```
    #include "Kamu.h"
