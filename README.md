@@ -54,15 +54,15 @@
      kamu.playBasicMotion(1);
    }
    ```
-  * **run()** 함수는 까무와 아두이노의 연결상태를 확인 및 업데이트 하는 함수입니다.<br/>loop문 안에서 수시로 호출 될 수 있게 작성해 주세요.
+  * **run()** 함수는 까무와 아두이노의 연결상태를 확인 및 업데이트 하는 함수입니다.<br/>loop문 안에서 수시로 호출 될 수 있게 작성 해 주세요.
    4. 함수 설명
       * **playBasicMotion(int motionnum)**
       * **playCustomMotion(int motionnum)**
       * **rotateMotor(int motornum, int angle)**
       * **rotateMotor(int motornum, int angle, int time)**
-      * **void playTempMotion(uint8_t framelength, const uint16_t *time_arr, const int8_t **angledata_arr)**
-      * **void saveTempMotion(const HEADER *header, const uint16_t *time_arr, const int8_t **angledata_arr)**
-      * **void saveTempMotion(const HEADER *header, const HEADER_EXTENDED *header_extended, const uint16_t *time_arr, const int8_t **angledata_arr)**
+      * **void playTempMotion(uint8_t framelength, const uint16_t \*time_arr, const int8_t \*\*angledata_arr)**
+      * **void saveTempMotion(const HEADER \*header, const uint16_t \*time_arr, const int8_t \*\*angledata_arr)**
+      * **void saveTempMotion(const HEADER \*header, const HEADER_EXTENDED \*header_extended, const uint16_t \*time_arr, const int8_t \*\*angledata_arr)**
 # Licence
 The code is released under the GNU General Public License.
 
