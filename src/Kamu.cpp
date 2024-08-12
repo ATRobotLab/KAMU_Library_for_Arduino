@@ -93,24 +93,23 @@ void KAMU::usbConfig()
                 {
                     Serial.print(".");
                 }
+                writeMsg("^et");
+                delay(1000);
                 String rcvMsg = readMsg();
                 int length = rcvMsg.length();
-                if (length > 14)
+                if (length > 2)
                 {
-                    String compare = rcvMsg.substring(length - 14, length);
-                    if (compare == "\r\nConnected!\r\n")
+                    if (rcvMsg.indexOf("entry") >= 0)
                     {
                         Serial.println("Connection Succeed");
                         ConnectionStatus = CONNECTED;
                         trycnt = 0;
-                        writeMsg("^et");
                         delay(500);
                         flushBuffer();
                         return;
                     }
                 }
-
-                delay(500);
+                flushBuffer();
             }
             break;
             case CONNECTION_UART:
@@ -171,22 +170,49 @@ void KAMU::usbConfig()
 /*
         라이브러리 설정을 초기화 하는 함수 입니다.
         원하는 Serial 통신 baud rate 를 설정 해 주세요.
+        OSC 에러 발생시, 모듈이 제대로 장착 되어있는지 확인하고,
+        usb전원을 뽑았다 다시 연결시켜 주세요.
 */
 void KAMU::init(unsigned long baud)
 {
     Serial.begin(baud);
     Serial.print("Waiting for connection...");
     int connection = Usb.Init();
-    if (connection == -1)
+    Serial.print("connection : ");
+    Serial.println(connection);
+    int cnt = 0;
+    while (connection == -1)
     {
-        Serial.println("OSC Failed");
-        return;
+        switch (cnt)
+        {
+        case 0:
+            Serial.println("OSC Failed");
+            connection = Usb.Init();
+            delay(10);
+            cnt++;
+            break;
+        case 1:
+        case 2:
+            Serial.println(cnt);
+            connection = Usb.Init();
+            delay(10);
+            cnt++;
+            break;
+        case 3:
+            Serial.println("Initializing failed. After Checking your system connection, remove the power and reconnect it.");
+            delay(100);
+            cnt++;
+            break;
+        default:
+            delay(100);
+        }
     }
     usbConfig();
     while (ConnectionStatus == DISCONNECTED)
     {
         delay(10);
     };
+    Serial.println(cnt);
 }
 void KAMU::writeMsg(String msg)
 {
@@ -263,14 +289,69 @@ void KAMU::run()
         };
     }
 }
-
-void KAMU::waitUntilStopped()
+void KAMU::waitUntilReceived()
 {
+    String rcvMsg = readMsg();
+    while (true)
+    {
+        if (ConnectionType == CONNECTION_BT)
+        {
+            if (rcvMsg.length() > 0)
+            {
+                int index = rcvMsg.indexOf("\n");
+                if (index >= 0)
+                {
+                    String data = rcvMsg.substring(0, index);
+                    String remain = rcvMsg.substring(index + 1, rcvMsg.length() + 1);
+                    rcvMsg = remain;
+                    if (data.indexOf("ATfinRobot") >= 0)
+                    {
+                        Serial.println("Received");
+                        return;
+                    }
+                }
+                else
+                {
+                    rcvMsg += readMsg();
+                }
+            }
+            else
+                rcvMsg = readMsg();
+        }
+        else
+        {
+            if (rcvMsg.length() > 0)
+            {
+                if (rcvMsg.indexOf("Written") >= 0)
+                {
+                    Serial.println("Received");
+                    return;
+                }
+                else
+                {
+                    rcvMsg = readMsg();
+                }
+            }
+            else
+                rcvMsg = readMsg();
+        }
+    }
+}
+void KAMU::waitUntilStopped(unsigned long timeout)
+{
+    unsigned long time = millis();
     switch (ConnectionType)
     {
     case CONNECTION_UART:
         while (true)
         {
+            if (timeout > 0)
+            {
+                if (millis() - time > timeout)
+                {
+                    return;
+                }
+            }
             Usb.Task();
             if (Usb.getUsbTaskState() == USB_DETACHED_SUBSTATE_WAIT_FOR_DEVICE)
                 return;
@@ -279,7 +360,6 @@ void KAMU::waitUntilStopped()
             if (length >= 8)
             {
                 String compare = rcvMsg.substring(length - 8, length);
-                Serial.println(compare);
                 if (compare == "Finish\r\n")
                 {
                     Serial.println("Finish");
@@ -293,8 +373,19 @@ void KAMU::waitUntilStopped()
         uint8_t proc = 0;
         while (true)
         {
+            if (timeout > 0)
+            {
+                if (millis() - time > timeout)
+                {
+                    return;
+                }
+            }
             if (!checkStatus())
+            {
+                Serial.println("error occured;");
                 return;
+            }
+
             switch (proc)
             {
             case 0:
@@ -358,6 +449,7 @@ bool KAMU::checkStatus()
     }
     return false;
 }
+
 /*기본 동작 (motionnum)번 동작을 수행합니다.
         0 <= motionnum <= 89*/
 void KAMU::playBasicMotion(int motionnum)
@@ -379,7 +471,7 @@ void KAMU::playBasicMotion(int motionnum)
         String cmd = "$pm" + String(hex);
         flushBuffer();
         writeMsg(cmd);
-        waitUntilStopped();
+        waitUntilStopped(TIMEOUT);
     }
 }
 /*
@@ -405,7 +497,7 @@ void KAMU::playCustomMotion(int motionnum)
         String cmd = "$pm" + String(hex);
         flushBuffer();
         writeMsg(cmd);
-        waitUntilStopped();
+        waitUntilStopped(TIMEOUT);
     }
 }
 /*
@@ -443,9 +535,8 @@ void KAMU::rotateMotor(int motornum, int angle)
             sprintf(hex2, "%03x", angle * 10);
         String cmd = "^an" + String(hex1) + String(hex2);
         flushBuffer();
-        Serial.println(cmd);
         writeMsg(cmd);
-        waitUntilStopped();
+        waitUntilStopped(TIMEOUT);
     }
 }
 /*
@@ -491,47 +582,55 @@ void KAMU::rotateMotor(int motornum, int angle, int time)
         String cmd = "^ad" + String(hex1) + String(hex2) + String(hex3);
         flushBuffer();
         writeMsg(cmd);
-        waitUntilStopped();
+        waitUntilStopped(TIMEOUT);
+    }
+}
+
+int KAMU::angleCorrection(int8_t angle)
+{
+    if (angle > 90)
+    {
+        return 900;
+    }
+    else if (angle < -90)
+    {
+        return -900;
+    }
+    else
+    {
+        return angle * 10;
     }
 }
 /*
-    임시동작의 (startFrame)프레임부터 (endFrame)프레임 까지 동작을 실행 합니다.
+    임시동작을 실행 합니다.
+    임시동작은 예제의 헤더파일 형식을 참고해 주세요.
+    framelength = 총 프레임 길이, *time_arr = 각 프레임의 동작 시간(*uint16_t[]),
+    **angledata_arr = 각 프레임의 모터값들(**int8_t[])
 */
-void KAMU::playTempMotion(TempMotion motion, int startFrame, int endFrame)
+void KAMU::playTempMotion(uint8_t framelength, const uint16_t *time_arr, const int8_t **angledata_arr)
 {
-    if (startFrame < 0)
+    if (framelength < 0 || framelength > 20)
     {
         return;
     }
-    if (endFrame > 20)
-    {
-        return;
-    }
-    if (startFrame > endFrame)
-    {
-        return;
-    }
-    int cnt;
-    for (int f = startFrame; f <= endFrame; f++)
+    for (uint8_t frame = 0; frame < framelength; frame++)
     {
         String cmd = "*mf";
         char hex_frame[3];
-        sprintf(hex_frame, "%02x", f - startFrame);
+        sprintf(hex_frame, "%02x", frame);
         cmd += String(hex_frame);
-        for (int i = 0; i < 18; i++)
+        for (uint8_t motor = 0; motor < MOTORS_KAMU; motor++)
         {
+            int angle = angledata_arr[frame][motor];
+            angle = angleCorrection(angle);
             char hex_angle[5];
-            int angle = motion.getAngle(f, i); // motionbuffer[f].angle[i];
             if (angle < 0)
             {
-                angle = 65536 + angle * 10;
+                angle = 65536 + angle;
             }
-            else
-                angle = angle * 10;
-
             sprintf(hex_angle, "%04x", angle);
             cmd += String(hex_angle);
-            if (i == 8 || i == 17)
+            if (motor == 8 || motor == 17)
             {
                 cmd += "000000000000";
             }
@@ -539,74 +638,208 @@ void KAMU::playTempMotion(TempMotion motion, int startFrame, int endFrame)
         flushBuffer();
         writeMsg(cmd);
         delay(10);
+        uint16_t time = time_arr[frame];
         String cmd2 = "*mt";
         cmd2 += String(hex_frame);
         char hex_time[5];
-        int time = motion.getTime(f); // motionbuffer[f - startFrame].time;
         sprintf(hex_time, "%04x", time);
         cmd2 += String(hex_time);
         flushBuffer();
         writeMsg(cmd2);
         delay(10);
-        cnt++;
     }
     String cmd3 = "*pm";
     char hex_length[3];
-    sprintf(hex_length, "%02x", cnt);
+    sprintf(hex_length, "%02x", framelength);
     cmd3 += String(hex_length);
     flushBuffer();
     writeMsg(cmd3);
     delay(10);
-    waitUntilStopped();
+    waitUntilStopped(TIMEOUT);
+}
+uint8_t utf8LengthOf(String str)
+{
+    uint8_t utf8Length = 0;
+    for (uint8_t i = 0; i < (uint8_t)str.length(); i++)
+    {
+        char c = str.charAt(i);
+        if (c < 0x80)
+        {
+            utf8Length++;
+        }
+        else if (c < 0x800)
+        {
+            utf8Length += 2;
+        }
+        else if (c < 0x10000)
+        {
+            utf8Length += 3;
+        }
+        else
+        {
+            utf8Length += 4;
+        }
+    }
+    return utf8Length;
+}
+void stringToUtf8(String str, byte *utf8Bytes, int utf8Length)
+{
+    uint8_t byteIndex = 0;
+    for (uint8_t i = 0; i < (uint8_t)str.length(); i++)
+    {
+        char c = str.charAt(i);
+        if (c < 0x80)
+        {
+            utf8Bytes[byteIndex++] = c;
+        }
+        else if (c < 0x800)
+        {
+            utf8Bytes[byteIndex++] = 0xC0 | (c >> 6);
+            utf8Bytes[byteIndex++] = 0x80 | (c & 0x3F);
+        }
+        else if (c < 0x10000)
+        {
+            utf8Bytes[byteIndex++] = 0xE0 | (c >> 12);
+            utf8Bytes[byteIndex++] = 0x80 | ((c >> 6) & 0x3F);
+            utf8Bytes[byteIndex++] = 0x80 | (c & 0x3F);
+        }
+        else
+        {
+            return;
+        }
+    }
+}
+String parsingHeader(const HEADER *data)
+{
+    String result;
+    char buf[3];
+    sprintf(buf, "%01x", 0);
+    result += buf;
+    sprintf(buf, "%02x", 0);
+    result += buf;
+    sprintf(buf, "%02x", 0);
+    result += buf;
+    sprintf(buf, "%02x", 0);
+    result += buf;
+    sprintf(buf, "%01x", 0);
+    result += buf;
+    result += "000";
+    return result;
+}
+String parsingHeader(const HEADER_EXTENDED *data)
+{
+    String result;
+    char buf[3];
+    sprintf(buf, "%01x", data->loop);
+    result += buf;
+    sprintf(buf, "%02x", data->loop_start);
+    result += buf;
+    sprintf(buf, "%02x", data->loop_end);
+    result += buf;
+    sprintf(buf, "%02x", data->loop_count);
+    result += buf;
+    sprintf(buf, "%01x", data->detect);
+    result += buf;
+    result += "000";
+    return result;
+}
+void KAMU::saveProcess(const HEADER *header, const uint16_t *time_arr, const int8_t **angledata_arr, String header_add)
+{
+    //=============================================================================================================
+    //|     | slot |         name         | loop | loop start | loop end | loop count | detect |  x  | frame lngth |
+    //-------------------------------------------------------------------------------------------------------------
+    //| >MH |  00  | 00000000000000000000 |   0  |     00     |    00    |     00     |   0    | 000 |      00     |
+    //=============================================================================================================
+    //|     | slot | frame num | frame time |  angle  |
+    //-------------------------------------------------
+    //| >MF |  00  |     00    |    0000    | 0000*24 |
+    //=================================================
+    if (header->framelength < 0 || header->framelength > 20)
+    {
+        return;
+    }
+    if (header->slot < 0 || header->slot > 89)
+    {
+        return;
+    }
+    uint8_t nameLength = utf8LengthOf(header->name);
+    if (nameLength > 20 || nameLength <= 0)
+    {
+        return;
+    }
+    Serial.println("Saving...");
+    String cmd_mh = ">mh";
+    String cmd_ch = ">ch";
+    String cmd_mf = ">mf";
+
+    char hex[3];
+    sprintf(hex, "%02x", header->slot + 90);
+    cmd_mh += String(hex);
+    cmd_mf += String(hex);
+    cmd_ch += String(hex);
+    byte utf8Bytes[nameLength];
+    stringToUtf8(header->name, utf8Bytes, nameLength);
+    for (uint8_t i = 0; i < nameLength; i++)
+    {
+        cmd_mh += (char)utf8Bytes[i];
+    }
+    for (uint8_t i = nameLength; i < 20; i++)
+    {
+        cmd_mh += " ";
+    }
+
+    /*헤더 나머지 추가*/
+    cmd_mh += header_add;
+    /**/
+    sprintf(hex, "%02x", header->framelength);
+    cmd_mh += hex;
+    flushBuffer();
+    writeMsg(cmd_mh);
+    waitUntilReceived();
+    for (uint8_t frame = 0; frame < header->framelength; frame++)
+    {
+        String mf = cmd_mf;
+        char hex_frame[3];
+        char hex_time[5];
+        sprintf(hex_time, "%04x", time_arr[frame]);
+        sprintf(hex_frame, "%02x", frame);
+        mf += String(hex_frame);
+        mf += String(hex_time);
+        for (uint8_t motor = 0; motor < MOTORS_KAMU; motor++)
+        {
+            int angle = angledata_arr[frame][motor];
+            angle = angleCorrection(angle);
+            char hex_angle[5];
+            if (angle < 0)
+            {
+                angle = 65536 + angle;
+            }
+            sprintf(hex_angle, "%04x", angle);
+            mf += String(hex_angle);
+            if (motor == 8 || motor == 17)
+            {
+                mf += "000000000000";
+            }
+        }
+        flushBuffer();
+        writeMsg(mf);
+        waitUntilReceived();
+        delay(100);
+    }
+    flushBuffer();
+    writeMsg(cmd_ch);
+    waitUntilReceived();
+    delay(100);
+    Serial.println("Saved!");
+}
+void KAMU::saveTempMotion(const HEADER *header, const uint16_t *time_arr, const int8_t **angledata_arr)
+{
+    String header_add = parsingHeader(header);
+    return saveProcess(header, time_arr, angledata_arr, header_add);
 }
 
-/*
-    임시동작 (framenum)번 프레임의 (motornum)번 모터의 각도를 (angle)도로 설정합니다.
-    여러 모터를 동시에 움직일 시에는 이 함수를 여러 번 사용하면 됩니다.
-    0 <= framenum <= 20,  0 <= motornum <= 17,  -90 <= angle <= 90
-*/
-void TempMotion::setMotorDegree(uint8_t framenum, uint8_t motornum, int8_t angle)
+void KAMU::saveTempMotion(const HEADER *header, const HEADER_EXTENDED *header_extended, const uint16_t *time_arr, const int8_t **angledata_arr)
 {
-    if (framenum < 0 || framenum > 20)
-    {
-        return;
-    }
-    if (motornum < 0 || motornum > 17)
-    {
-        return;
-    }
-    if (angle < -90)
-    {
-        angle = -90;
-    }
-    else if (angle > 90)
-    {
-        angle = 90;
-    }
-    motionbuffer[framenum].angle[motornum] = angle;
-}
-/*
-    임시동작 (framenum)번 프레임의 시간을 (time)밀리초로 설정합니다.
-    time >= 0
-*/
-void TempMotion::setFrameTime(uint8_t framenum, uint16_t time)
-{
-    if (framenum < 0 || framenum > 20)
-    {
-        return;
-    }
-    if (time < 0)
-    {
-        Serial.println("The time variable must be greater than or equal to 0.");
-        return;
-    }
-    motionbuffer[framenum].time = time;
-}
-int8_t TempMotion::getAngle(uint8_t frame, uint8_t motornum)
-{
-    return motionbuffer[frame].angle[motornum];
-}
-uint16_t TempMotion::getTime(uint8_t frame)
-{
-    return motionbuffer[frame].time;
+    String header_add = parsingHeader(header_extended);
+    return saveProcess(header, time_arr, angledata_arr, header_add);
 }

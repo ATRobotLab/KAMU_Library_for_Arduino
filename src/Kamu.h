@@ -7,24 +7,23 @@
 #define CONNECTION_BT 1
 #define RUNNING 1
 #define STOPPED 0
-
-class TempMotion
+#define MOTORS_KAMU 18 // 까무의 기본 모터수는 18개 입니다.
+#define TIMEOUT -1     // 블루투스 통신의 응답 대기시간입니다. 기본값은 '제한없음'입니다.
+                       // 통신이 원할하지 않을 경우 플레이할 동작 시간보다 크게 설정해 대기시간을 설정 해 주세요.
+typedef struct
 {
-private:
-    struct motionBuffer
-    {
-        int8_t angle[18];
-        uint16_t time;
-    };
-    motionBuffer motionbuffer[20];
-
-public:
-    int8_t getAngle(uint8_t frame, uint8_t motornum);
-    uint16_t getTime(uint8_t frame);
-    void setMotorDegree(uint8_t framenum, uint8_t motornum, int8_t angle);
-    void setFrameTime(uint8_t framenum, uint16_t time);
-};
-
+    byte slot;
+    String name;
+    byte framelength;
+} HEADER;
+typedef struct
+{
+    byte loop;
+    byte loop_start;
+    byte loop_end;
+    byte loop_count;
+    byte detect;
+} HEADER_EXTENDED;
 class KAMU
 {
 private:
@@ -37,7 +36,10 @@ private:
     String readMsg();
     bool checkStatus();
     bool status = STOPPED;
-    void waitUntilStopped();
+    void waitUntilStopped(unsigned long timeout);
+    void waitUntilReceived();
+    int angleCorrection(int8_t angle);
+    void saveProcess(const HEADER *header, const uint16_t *time_arr, const int8_t **angledata_arr, String header_add);
 
 public:
     void init(unsigned long baud);
@@ -47,9 +49,9 @@ public:
     void playCustomMotion(int motionnum);
     void rotateMotor(int motornum, int angle);
     void rotateMotor(int motornum, int angle, int time);
-    // void setTempMotion_MotorDegree(int framenum, int motornum, int angle);
-    // void setTempMotion_FrameTime(int framenum, int time);
-    void playTempMotion(TempMotion motion, int startFrame, int endFrame);
+    void playTempMotion(uint8_t framelength, const uint16_t *time_arr, const int8_t **angledata_arr);
+    void saveTempMotion(const HEADER *header, const uint16_t *time_arr, const int8_t **angledata_arr);
+    void saveTempMotion(const HEADER *header, const HEADER_EXTENDED *header_extended, const uint16_t *time_arr, const int8_t **angledata_arr);
 };
 
 #endif
