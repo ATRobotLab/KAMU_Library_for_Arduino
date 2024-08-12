@@ -6,22 +6,21 @@
 1. ZIP형식의 소스파일을 다운로드 받습니다.
 2. 아두이노 IDE를 실행 한 뒤,  스케치 -> 라이브러리포함 -> .ZIP 라이브러리 추가... 에서 다운로드 받은 KAMU_Library_for_Arduino-main.zip를 추가해 주세요.
 3. 라이브러리 설명
-
-   *kamu.h 라이브러리를 include 합니다.
+  * kamu.h 라이브러리를 include 합니다.
    ```
    #include "Kamu.h"
    ```
-   *KAMU 객체를 선언합니다.
+  * KAMU 객체를 선언합니다.
    ```
    KAMU kamu;
    ```
-   *까무 및 Serial 통신 BaudRate를 설정합니다.
-   *BaudRate 는 115200으로 설정해 주세요.
+  * 까무 및 Serial 통신 BaudRate를 설정합니다.
+  * BaudRate 는 115200으로 설정해 주세요.
    ```
    unsigned long BaudRate = 115200;
    ```
-   *까무 통신 방식을 설정합니다.
-   *블루투스 동글이를 사용해 블루투스로 연결할 경우 CONNECTION_BT 를,
+  * 까무 통신 방식을 설정합니다.
+  * 블루투스 동글이를 사용해 블루투스로 연결할 경우 CONNECTION_BT 를,
    USB-C 케이블을 사용해 직접 연결할 경우 CONNECTION_UART 를 입력해 주세요.
    ```
    void setup()
