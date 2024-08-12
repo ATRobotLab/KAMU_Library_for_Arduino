@@ -1,0 +1,35 @@
+#######################################
+# Syntax Coloring Map For Kamu_Lib
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+KAMU		KEYWORD1
+TempMotion 	KEYWORD1	
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+init			KEYWORD2
+run			KEYWORD2
+setConnectionType		KEYWORD2
+playBasicMotion		KEYWORD2
+playCustomMotion		KEYWORD2
+rotateMotor		KEYWORD2	
+playTempMotion		KEYWORD2
+saveTempMotion		KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+CONNECTED		LITERAL1
+DISCONNECTED		LITERAL1
+CONNECTION_UART	LITERAL1	
+CONNECTION_BT		LITERAL1
+RUNNING		LITERAL1
+STOPPED			LITERAL1
+MOTORS_KAMU		LITERAL1
+TIMEOUT			LITERAL1
