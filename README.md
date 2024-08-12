@@ -1,6 +1,6 @@
 # KAMU_Library_for_Arduino
 
-# HOw to Use
+# How to Use
 
 # Licence
 The code is released under the GNU General Public License.
