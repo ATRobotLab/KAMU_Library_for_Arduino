@@ -56,11 +56,11 @@
    ```
   * **run()** 함수는 까무와 아두이노의 연결상태를 확인 및 업데이트 하는 함수입니다.<br/>loop문 안에서 수시로 호출 될 수 있게 작성 해 주세요.
    4. 함수 설명
-   
+
       **까무의 모터의** ***0°*****는 처음 전원을 켰을때의 '*****차렷*****' 자세를 기준으로 합니다.** 
 
-      * **playBasicMotion(int motionnum)**
-        * 기본 동작 (***motionnum***) 번 동작을 실행 합니다.
+      * **playBasicMotion(int <span style="color:red">motionnum</span>)**
+        * 기본 동작 (***<span style="color:red">motionnum</span>***) 번 동작을 실행 합니다.
       * **playCustomMotion(int motionnum)**
         * 커스텀 동작 (***motionnum***) 번 동작을 실행 합니다.
       * **rotateMotor(int motornum, int angle)**
