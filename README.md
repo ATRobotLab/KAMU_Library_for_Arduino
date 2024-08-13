@@ -34,6 +34,7 @@
     void setup()
     {
       kamu.setConnectionType(CONNECTION_BT);
+      //kamu.setConnectionType(CONNECTION_UART);
       kamu.init(BaudRate);
     }
     ```
