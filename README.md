@@ -64,7 +64,7 @@
    
       **까무의 모터의** ***0°*****는 처음 전원을 켰을때의 '*****차렷*****' 자세를 기준으로 합니다.** 
 
-      * **playBasicMotion(int *<span style="color:Green">motionnum</span>*)**
+      * **playBasicMotion(int *${\textsf{\color{green}motionnum}}$*)**
         * 기본 동작 (***<span style="color:Green">motionnum</span>***) 번 동작을 실행 합니다.
       * **playCustomMotion(int *<span style="color:Green">motionnum</span>*)**
         * 커스텀 동작 (***<span style="color:Green">motionnum</span>***) 번 동작을 실행 합니다.
