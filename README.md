@@ -17,18 +17,18 @@
     ```c++
     #include "Kamu.h"
     ```
-    * kamu.h 라이브러리를 include 합니다.
+    * kamu.h 라이브러리를 include 합니다.<br/><br/>
 
     ```c++
     KAMU kamu;
     ```
-    * KAMU 객체를 선언합니다.
+    * KAMU 객체를 선언합니다.<br/><br/>
 
     ```c++
     unsigned long BaudRate = 115200;
     ```
     * 까무 및 Serial 통신 BaudRate를 설정합니다.
-    * BaudRate 는 115200으로 설정해 주세요.
+    * BaudRate 는 115200으로 설정해 주세요.<br/><br/>
 
     ```c++
     void setup()
@@ -39,7 +39,7 @@
     ```
     * 까무 통신 방식을 설정합니다.
     * 블루투스 동글이를 사용해 **블루투스**로 연결할 경우 ***CONNECTION_BT*** 를,<br/>USB-C 케이블을 사용해 **직접 연결**할 경우 ***CONNECTION_UART*** 를 입력해 주세요.
-    * **init()** 함수를 사용해 까무와 아두이노의 통신 연결을 Initializing 해 주세요. 
+    * **init()** 함수를 사용해 까무와 아두이노의 통신 연결을 Initializing 해 주세요.<br/><br/> 
 
      ```c++
      void loop()
