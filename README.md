@@ -64,15 +64,14 @@
    
       **까무의 모터의** ***0°*****는 처음 전원을 켰을때의 '*****차렷*****' 자세를 기준으로 합니다.** 
 
-      * **playBasicMotion(int *$${\color{red}Red}$$*)**
-        * 기본 동작 (***<span style="color:Green">motionnum</span>***) 번 동작을 실행 합니다.
-      * **playCustomMotion(int *<span style="color:Green">motionnum</span>*)**
-        * 커스텀 동작 (***<span style="color:Green">motionnum</span>***) 번 동작을 실행 합니다.
-      * **rotateMotor(int *<span style="color:Green">motornum</span>*, int *<span style="color:Red">angle</span>*)**
-        * (***<span style="color:Green">motornum</span>***) 번 모터를 (***<span style="color:Red">angle</span>***) 도로 회전 합니다.
-      * **rotateMotor(int *<span style="color:Green">motornum</span>*, int *<span style="color:Red">angle</span>*, int *<span style="color:Blueviolet">time</span>*)**
-        * (***<span style="color:Green">motornum</span>***) 번 모터를 (***<span style="color:Red">angle</span>***) 도로 (***<span style="color:Blueviolet">time</span>***) 밀리초 동안 회전 합니다.
-      <br/><br/>
+      * **playBasicMotion(int *`motionnum`*)**
+        * 기본 동작 (***`motionnum`***) 번 동작을 실행 합니다.<br/><br/>
+      * **playCustomMotion(int *`motionnum`*)**
+        * 커스텀 동작 (***`motionnum`***) 번 동작을 실행 합니다.<br/><br/>
+      * **rotateMotor(int *`motionnum`*, int *`angle`*)**
+        * (***`motionnum`***) 번 모터를 (***`angle`***) 도로 회전 합니다.<br/><br/>
+      * **rotateMotor(int *`motionnum`*, int *`angle`*, int *`time`*)**
+        * (***`motionnum`***) 번 모터를 (***`angle`***) 도로 (***`time`***) 밀리초 동안 회전 합니다.<br/><br/>
       ---
       **나만의 동작을 만들기 위해서는 *motion.h* 파일의 작성이 필요합니다.<br/>**
       * **motion.h**
@@ -196,13 +195,13 @@
           };
 
       ```
-      * **void playTempMotion(uint8_t *<span style="color:Green">framelength</span>*, const uint16_t *<span style="color:Blueviolet">\*time_arr</span>*, const int8_t *<span style="color:Red">\*\*angledata_arr</span>*)**
+      * **void playTempMotion(uint8_t *`framelength`*, const uint16_t *`*time_arr`*, const int8_t *`**angledata_arr`*)**
         * *motion.h* 에서 작성한 동작을 재생합니다.
-        * ex) `kamu.playTempMotion(FRAME_LENGTH, motion0_times, motion0_angles);`
-      * **void saveTempMotion(const HEADER *<span style="color:Green">\*header</span>*, const uint16_t *<span style="color:Blueviolet">\*time_arr</span>*, const int8_t *<span style="color:Red">\*\*angledata_arr</span>*)**
+        * ex) `kamu.playTempMotion(FRAME_LENGTH, motion0_times, motion0_angles);`<br/><br/>
+      * **void saveTempMotion(const HEADER *`*header`*, const uint16_t *`*time_arr`*, const int8_t *`**angledata_arr`*)**
         * *motion.h* 에서 작성한 동작을 까무에 저장합니다.
-        * ex) `kamu.saveTempMotion(&motionheader, motion0_times, motion0_angles);`
-      * **void saveTempMotion(const HEADER *<span style="color:Green">\*header</span>*, const HEADER_EXTENDED *<span style="color:Yellowgreen">\*header_extended</span>*, const uint16_t *<span style="color:Blueviolet">\*time_arr</span>*, const int8_t *<span style="color:Red">\*\*angledata_arr</span>*)**
+        * ex) `kamu.saveTempMotion(&motionheader, motion0_times, motion0_angles);`<br/><br/>
+      * **void saveTempMotion(const HEADER *`*header`*, const HEADER_EXTENDED *`*header_extended`*, const uint16_t *`*time_arr`*, const int8_t *`**angledata_arr`*)**
         * motion.h 에서 작성한 동작을 까무에 저장합니다.(추가기능 포함)
         * ex) `kamu.saveTempMotion(&motionheader, &motionheader_extended, motion0_times, motion0_angles);`<br/><br/>
 # Licence
