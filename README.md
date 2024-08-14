@@ -206,6 +206,8 @@
       * **void saveTempMotion(const HEADER *`*header`*, const HEADER_EXTENDED *`*header_extended`*, const uint16_t *`*time_arr`*, const int8_t *`**angledata_arr`*)**
         * motion.h 에서 작성한 동작을 까무에 저장합니다.(추가기능 포함)
         * ex) `kamu.saveTempMotion(&motionheader, &motionheader_extended, motion0_times, motion0_angles);`<br/><br/>
+# 주의사항
+ * Arduino Uno R3 보드의 경우 아두이노의 메모리 용량 한계로 나만의 동작을 **여러개** 제작시 오작동이 발생합니다.<vr/> 내가만든 동작 여러개를 재생하고 싶을 시에는 만든동작을 `saveTempMotion`함수를 사용해 저장을 한 뒤, **새로운 스케치**에서 `playCustomMotion`함수를 사용해 재생할 수 있도록 해 주세요.
 # Licence
 The code is released under the GNU General Public License.<br/><br/>
 
