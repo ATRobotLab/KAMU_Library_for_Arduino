@@ -108,36 +108,6 @@
           MOTION_NAME,
           FRAME_LENGTH};
 
-      /*------------------동작 추가 기능 활성화----------------------*/
-      //============================================================
-      /* <== 추가 기능을 활성화 하려면 주석을 제거해 주세요.
-
-      //동작의 반복 여부를 설정합니다.
-      #define LOOP_ENABLE 0
-
-      //반복 시작 프레임을 설정합니다.
-      #define LOOP_START 0
-
-      //반복 끝 프레임을 설정합니다.
-      #define LOOP_END 0
-
-      //반복 횟수를 설정합니다.
-      #define LOOP_CNT 0
-
-      //자동 일어서기 모드가 켜져있을때 넘어짐 감지 활성화 여부를 설정합니다.
-      //0 => 넘어짐 감지 켜기, 1 => 넘어짐 감지 끄기
-      #define FALL_DETECTION 0
-
-      //==============================================================
-      const HEADER_EXTENDED motionheader_extended = {
-          LOOP_ENABLE,
-          LOOP_START,
-          LOOP_END,
-          LOOP_CNT,
-          FALL_DETECTION};
-      ==> */
-      /*-----------------------------------------------------------------*/
-
       /**************************************************************************************************************************************************************/
 
       //===============================TempMotion 각도 설정===========================
@@ -204,9 +174,6 @@
       * **void saveTempMotion(const HEADER *`*header`*, const uint16_t *`*time_arr`*, const int8_t *`**angledata_arr`*)**
         * *motion.h* 에서 작성한 동작을 까무에 저장합니다.
         * ex) `kamu.saveTempMotion(&motionheader, motion0_times, motion0_angles);`<br/><br/>
-      * **void saveTempMotion(const HEADER *`*header`*, const HEADER_EXTENDED *`*header_extended`*, const uint16_t *`*time_arr`*, const int8_t *`**angledata_arr`*)**
-        * motion.h 에서 작성한 동작을 까무에 저장합니다.(추가기능 포함)
-        * ex) `kamu.saveTempMotion(&motionheader, &motionheader_extended, motion0_times, motion0_angles);`<br/><br/>
 # 주의사항
  * Arduino Uno R3 보드의 경우 아두이노의 메모리 용량 한계로 나만의 동작을 **여러개** 제작시 오작동이 발생합니다.<vr/> 내가만든 동작 여러개를 재생하고 싶을 시에는 만든동작을 `saveTempMotion`함수를 사용해 저장을 한 뒤, **새로운 스케치**에서 `playCustomMotion`함수를 사용해 재생할 수 있도록 해 주세요.
 # Licence
