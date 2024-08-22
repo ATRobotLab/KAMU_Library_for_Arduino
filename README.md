@@ -84,7 +84,7 @@
       //---------------필수 설정-------------------
       /*재생할 프레임의 총 길이를 의미합니다.*/
       /*만들 수 있는 최대 프레임의 길이는 20 입니다.*/
-      #define FRAME_LENGTH 5
+      #define FRAME_LENGTH 6
 
       //============================================
 
@@ -116,12 +116,12 @@
       FRAME_LENGTH 개수 만큼 작성해 주세요.
       */
       const int8_t frame0[MOTORS_KAMU] = {
-        90, 0, 0, 
-        0, 0, 0, 
-        0, 0, 0, 
-        0, 0, 0, 
-        0, 0, 0, 
-        0, 0, 0};
+          90, 0, 0, 
+          0, 0, 0, 
+          0, 0, 0, 
+          0, 0, 0, 
+          0, 0, 0, 
+          0, 0, 0};
       const int8_t frame1[MOTORS_KAMU] = {
           0, 0, 0,
           0, 0, 0,
@@ -150,13 +150,20 @@
           0, 0, 0,
           0, 0, 0,
           0, 0, 0};
+      const int8_t frame5[MOTORS_KAMU] = {
+          0, 0, 0,
+          0, 0, 0,
+          0, 0, 0,
+          0, 0, 0,
+          0, 0, 0,
+          0, 0, 0};
 
       /*
       FRAME_LENGTH 크기에 맞춰 배열을 작성해 주세요.
       */
       const int8_t *motion0_angles[FRAME_LENGTH] = {
           (int8_t *)&frame0, (int8_t *)&frame1, (int8_t *)&frame2,
-          (int8_t *)&frame3, (int8_t *)&frame4};
+          (int8_t *)&frame3, (int8_t *)&frame4, (int8_t *)&frame5};
 
       //===============================TempMotion 시간 설정===========================
       /*
@@ -164,7 +171,7 @@
       FRAME_LENGTH 크기에 맞춰 배열을 작성해 주세요.
       */
       const uint16_t motion0_times[FRAME_LENGTH] = {
-          300, 300, 500, 500, 700
+          300, 300, 500, 500, 700, 700
           };
 
       ```
