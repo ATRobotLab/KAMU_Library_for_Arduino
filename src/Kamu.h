@@ -16,14 +16,7 @@ typedef struct
     String name;
     byte framelength;
 } HEADER;
-typedef struct
-{
-    byte loop;
-    byte loop_start;
-    byte loop_end;
-    byte loop_count;
-    byte detect;
-} HEADER_EXTENDED;
+
 class KAMU
 {
 private:
@@ -51,7 +44,6 @@ public:
     void rotateMotor(int motornum, int angle, int time);
     void playTempMotion(uint8_t framelength, const uint16_t *time_arr, const int8_t **angledata_arr);
     void saveTempMotion(const HEADER *header, const uint16_t *time_arr, const int8_t **angledata_arr);
-    void saveTempMotion(const HEADER *header, const HEADER_EXTENDED *header_extended, const uint16_t *time_arr, const int8_t **angledata_arr);
 };
 
 #endif

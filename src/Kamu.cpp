@@ -726,23 +726,7 @@ String parsingHeader(const HEADER *data)
     result += "000";
     return result;
 }
-String parsingHeader(const HEADER_EXTENDED *data)
-{
-    String result;
-    char buf[3];
-    sprintf(buf, "%01x", data->loop);
-    result += buf;
-    sprintf(buf, "%02x", data->loop_start);
-    result += buf;
-    sprintf(buf, "%02x", data->loop_end);
-    result += buf;
-    sprintf(buf, "%02x", data->loop_count);
-    result += buf;
-    sprintf(buf, "%01x", data->detect);
-    result += buf;
-    result += "000";
-    return result;
-}
+
 void KAMU::saveProcess(const HEADER *header, const uint16_t *time_arr, const int8_t **angledata_arr, String header_add)
 {
     //=============================================================================================================
@@ -835,11 +819,5 @@ void KAMU::saveProcess(const HEADER *header, const uint16_t *time_arr, const int
 void KAMU::saveTempMotion(const HEADER *header, const uint16_t *time_arr, const int8_t **angledata_arr)
 {
     String header_add = parsingHeader(header);
-    return saveProcess(header, time_arr, angledata_arr, header_add);
-}
-
-void KAMU::saveTempMotion(const HEADER *header, const HEADER_EXTENDED *header_extended, const uint16_t *time_arr, const int8_t **angledata_arr)
-{
-    String header_add = parsingHeader(header_extended);
     return saveProcess(header, time_arr, angledata_arr, header_add);
 }
