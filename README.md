@@ -183,7 +183,7 @@
         * ex) `kamu.saveTempMotion(&motionheader, motion0_times, motion0_angles);`<br/><br/>
   5. 모터 번호
       * 코드 작성시 필요한 모터의 번호는 아래의 이미지를 참고 해 주세요.<br/><br/>
-      <img src="https://github.com/ATRobotLab/KAMU_Library_for_Arduino/blob/main/MotorNumber.png"><br/>
+      <img src="https://github.com/ATRobotLab/KAMU_Library_for_Arduino/blob/main/MotorNumber.png" width = "490" height="560"><br/>
 # 주의사항
  * Arduino Uno R3 보드의 경우 아두이노의 메모리 용량 한계로 나만의 동작을 **여러개** 제작시 오작동이 발생합니다.<vr/> 내가만든 동작 여러개를 재생하고 싶을 시에는 만든동작을 `saveTempMotion`함수를 사용해 저장을 한 뒤, **새로운 스케치**에서 `playCustomMotion`함수를 사용해 재생할 수 있도록 해 주세요.
 # Licence
