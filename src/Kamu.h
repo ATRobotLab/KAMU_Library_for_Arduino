@@ -4,7 +4,7 @@
 #define CONNECTED 1
 #define DISCONNECTED 0
 #define CONNECTION_UART 0
-#define CONNECTION_BT 1
+#define CONNECTION_DONGLE 1
 #define RUNNING 1
 #define STOPPED 0
 #define MOTORS_KAMU 18 // 까무의 기본 모터수는 18개 입니다.

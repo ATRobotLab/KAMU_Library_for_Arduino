@@ -35,13 +35,13 @@
     ```c++
     void setup()
     {
-      kamu.setConnectionType(CONNECTION_BT);
+      kamu.setConnectionType(CONNECTION_DONGLE);
       //kamu.setConnectionType(CONNECTION_UART);
       kamu.init(BaudRate);
     }
     ```
     * 까무 통신 방식을 설정합니다.
-    * 블루투스 동글이를 사용해 **블루투스**로 연결할 경우 ***CONNECTION_BT*** 를,<br/>USB-C 케이블을 사용해 **직접 연결**할 경우 ***CONNECTION_UART*** 를 입력해 주세요.
+    * WiFi/블루투스 동글이를 사용해 **WiFi/블루투스**로 연결할 경우 ***CONNECTION_DONGLE*** 를,<br/>USB-C 케이블을 사용해 **직접 연결**할 경우 ***CONNECTION_UART*** 를 입력해 주세요.
     * **init()** 함수를 사용해 까무와 아두이노의 통신 연결을 Initializing 해 주세요.<br/><br/> 
 
      ```c++

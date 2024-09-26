@@ -57,7 +57,7 @@ CP210x cp210x(&Usb, &cp210xAsync);
 int status_old = USB_DETACHED_SUBSTATE_WAIT_FOR_DEVICE;
 /*
         연결 방식을 선택합니다.
-        CONNECTION_BT => 블루투스로 연결
+        CONNECTION_DONGLE => 무선으로 연결
         CONNECTION_UART => USB 케이블 직접 연결
 */
 void KAMU::setConnectionType(uint8_t connectiontype)
@@ -83,7 +83,7 @@ void KAMU::usbConfig()
             }
             switch (ConnectionType)
             {
-            case CONNECTION_BT: // 블루투스로 연결시 엔트리모드 진입할것
+            case CONNECTION_DONGLE:
             {
                 if (!trycnt)
                 {
@@ -277,7 +277,7 @@ void KAMU::run()
         };
     }
     status_old = Usb.getUsbTaskState();
-    if (ConnectionType == CONNECTION_BT && !checkStatus())
+    if (ConnectionType == CONNECTION_DONGLE && !checkStatus())
     {
         Serial.println("Bluetooth Disconnected!!");
         Serial.print("waiting for usb connection...");
@@ -294,7 +294,7 @@ void KAMU::waitUntilReceived()
     String rcvMsg = readMsg();
     while (true)
     {
-        if (ConnectionType == CONNECTION_BT)
+        if (ConnectionType == CONNECTION_DONGLE)
         {
             if (rcvMsg.length() > 0)
             {
@@ -368,7 +368,7 @@ void KAMU::waitUntilStopped(unsigned long timeout)
             }
         }
         break;
-    case CONNECTION_BT:
+    case CONNECTION_DONGLE:
     {
         uint8_t proc = 0;
         while (true)
@@ -411,7 +411,7 @@ bool KAMU::checkStatus()
 {
     unsigned long time = millis();
     int errcnt = 0;
-    while (errcnt < 100)
+    while (errcnt < 200)
     {
         if (millis() - time > 1)
         {
