@@ -6,7 +6,8 @@
 * **모듈 연결 방법**
   * 아래 사진과 같이 아두이노 UNO R3(R4) 보드에 까무 아두이노 모듈을 장착 해 주세요. 
   <img src="https://github.com/ATRobotLab/KAMU_Library_for_Arduino/blob/main/How_to_connect.png" width = "900" height="470"><br/>
-  * 까무 아두이노 모듈의 USB 포트에 **까무 블루투스 동글**을 연결 하거나, **USB C to A 케이블**을 사용해 까무와 아두이노 모듈을 연결 해 주세요.<br/><br/>
+  * 까무 아두이노 모듈의 USB 포트에 **까무 Wi-Fi/블루투스 동글**을 연결 하거나, **USB C to A 케이블**을 사용해 까무와 아두이노 모듈을 연결 해 주세요.<br/><br/>
+  * 까무 1 의 경우 유선 연결을 하기 위해서는 전용 Serial 통신 JIG가 필요 합니다.
 * **라이브러리 설치 및 사용법**
   1. ZIP형식의 소스파일을 다운로드 받습니다.<br/><br/>
   
