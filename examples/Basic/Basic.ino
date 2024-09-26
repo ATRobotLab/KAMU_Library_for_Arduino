@@ -4,7 +4,7 @@ KAMU kamu;
 unsigned long BaudRate = 115200;
 void setup()
 {
-  kamu.setConnectionType(CONNECTION_BT);
+  kamu.setConnectionType(CONNECTION_DONGLE);
   kamu.init(BaudRate);
 }
 
